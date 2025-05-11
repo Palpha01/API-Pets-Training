@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pets App</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Pets List</h1>
+        <div id="pets-container"></div>
+        <a href="create.html">Add New Pet</a>
+
+        <script>
+            fetch('/api/pets')
+                .then(res => res.json())
+                .then(pets => {
+                    const container = document.getElementById('pets-container');
+                    pets.forEach(pet => {
+                        const petDiv = document.createElement('div');
+                        petDiv.innerHTML = `
+                            <h3>${pet.name}</h3>
+                            <p>Type: ${pet.type}</p>
+                            <p>Age: ${pet.age}</p>
+                            <p>Owner: ${pet.owner}</p>
+                            <a href="update.html?id=${pet._id}">Edit</a>
+                            <button onclick="deletePet('${pet._id}')">Delete</button>
+                        `;
+                        container.appendChild(petDiv);
+                    });
+                });
+
+            function deletePet(id) {
+                fetch(`/api/pets/${id}`, {
+                    method: 'DELETE'
+                }).then(() => window.location.reload());
+            }
+        </script>
+    </body>
+</html>

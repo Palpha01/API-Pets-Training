@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Pet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+    <body>
+        <h1>Add New Pet</h1>
+        <form id="create-form">
+            <input type="text" name="name" placeholder="Name" required />
+            <input type="number" name="age" placeholder="Age" required />
+            <input type="text" name="type" placeholder="Type (Dog, Cat, etc.)" required />
+            <input type="text" name="owner" placeholder="Owner Name" required />
+            <button type="submit">Add</button>
+        </form>
+
+        <script>
+            document.getElementById('create-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData);
+                fetch('/api/pets', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                }).then(() => window.location.href = '/');
+            });
+        </script>
+    </body>
+</html>

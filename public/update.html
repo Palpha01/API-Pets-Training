@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Pet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+    <body>
+        <h1>Update Pet</h1>
+        <form id="update-form"></form>
+
+        <script>
+            const params = URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            fetch('/api/pets/${id}')
+                .then(res => res.json())
+                .then(pet => {
+                    const form = document.getElementById('update-form');
+                    form.innerHTML = `
+                        <input type="text" name="name" value="${pet.name}" required />
+                        <input type="number" name="age" value="${pet.age}" required />
+                        <input type="text" name="type" value="${pet.type}" required />
+                        <input type="text" name="owner" value="${pet.owner}" required />
+                        <button type="submit">Update</button>
+                    `;
+
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const formData = new FormData(this);
+                        const data = Object.fromEntries(formData);
+                        fetch(`/api/pets/${id}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data),
+                        }).then(() => window.location.href = '/');
+                    });
+                });
+        </script>
+    </body>
+</html>
